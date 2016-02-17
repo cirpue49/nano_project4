@@ -403,9 +403,9 @@ Multivariate Plots Section
 ggplot(aes(x = alcohol, y = volatile.acidity, color = quality), data = data)+
   geom_point(alpha = 1, size = 1.5)+
   geom_smooth(method=lm,se=FALSE)+
-  ggtitle("Scatter plots of alcohol and volatile.acidity with coloured quality")+
-  xlab("Alcohol[%]")+
-  ylab("Volatile.acidity")+
+  ggtitle("Scatter plot of alcohol and volatile.acidity with coloured quality")+
+  xlab("Alcohol [%]")+
+  ylab("Volatile.acidity [g / dm^3]")+
   scale_color_brewer(type = 'div',
                      guide = guide_legend(title = 'Quality', reverse = T,
                                           override.aes = list(alpha = 1, size = 2)))
@@ -420,10 +420,40 @@ You can see the color is changing from up-left to bottom-right.
 In addition, regression shows that volatile.acidity is more important factor to predict quality of wine than alcohol since many colored regression lines are horizontal, which means colored dots are scattered along with volatile.acidity. 
 From this graph the lower the volatile.acidity become, the better the quality gets.
 
-```{r}
 
+I suspected if volatile.acidity has correlation with density and sulphates.
+In fact, I made the same kind of graphs with different values, with density and sulphates.
+
+First of all, scatter plot with volatile.acidity and density with coloured quality
+
+```{r echo=FALSE}
+ggplot(aes(x =density , y = volatile.acidity, color = quality), data = data)+
+  geom_point(alpha = 1, size = 1.5)+
+  geom_smooth(method=lm,se=FALSE)+
+  ggtitle("Scatter plot of density and volatile.acidity with coloured quality")+
+  xlab("Density [g / cm^3]")+
+  ylab("Volatile.acidity [g / dm^3]")+
+  scale_color_brewer(type = 'div',
+                     guide = guide_legend(title = 'Quality', reverse = T,
+                                          override.aes = list(alpha = 1, size = 2)))
 ```
+Since mamy regression lines are horizontal, volatile.acidity has stronger correlation with quality than density.
 
+I made scatter plot with suphates. 
+
+```{r echo=FALSE}
+ggplot(aes(x =sulphates , y = volatile.acidity, color = quality), data = data)+
+  geom_point(alpha = 1, size = 1.5)+
+  geom_smooth(method=lm,se=FALSE)+
+  ggtitle("Scatter plot of sulphates and volatile.acidity with coloured quality")+
+  xlab("Sulphates [ g / dm3]")+
+  ylab("Volatile.acidity [g / dm^3]")+
+  scale_color_brewer(type = 'div',
+                     guide = guide_legend(title = 'Quality', reverse = T,
+                                          override.aes = list(alpha = 1, size = 2)))
+```
+Although quality 3's regression line is vertical, other lines are almost horizontal.
+Again, there is a strong correlation with volatile.acidity and sulphates.
 
 change quality value from factor to integer in order to do multiple regression.
 
@@ -440,22 +470,23 @@ Adjusted R-squared is 0.3161. Almost 30 % of quality value is explained by this 
 
 
 
-Multivariate Analysis
-```{r}
-
+#Multivariate Analysis
+```{r echo=FALSE}
+data$quality<-NULL
 ```
 
 Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
 
-By plotting quality variable with color, I could observed that how volatile.acidity and alcohol correlate with quality.
+I compared with volotile.acidity and other thre features, such as alcohol, density and sulphates. As a result, volatile.acidity has stronger correlation with quality of wine over each of three values. 
 
 Were there any interesting or surprising interactions between features?
-There is a interesting correlation, but it is not that strong compared with diamond's example. 
+
+Only watching scatter plot does not make sense, but adding regression lines bring much meaning to me. I learned how impportant to look at the data from different points of views.  
 
 
 #Final_Plots_and_Summary
 ```{r echo=FALSE}
-data$quality<-NULL
+
 data$quality<-quality_data
 ```
 
@@ -479,6 +510,8 @@ ggplot(aes(x=quality,y=volatile.acidity), data=data)+
   geom_jitter(alpha=0.3)+
   coord_flip()
 ```
+I chose this plot simply becaue it reflects my idea that there is a correlation between volatile.acidity and quality. 
+At the same time I thought this coloured box plot could easily convey information of how volatile.acidity effect the quality of wine, the smaller volatile.acidity get, the better quality become. 
 
 #Plot Two
 ```{r echo=FALSE}
@@ -490,6 +523,10 @@ ggplot(aes(x=quality,y=alcohol), data=data)+
   geom_jitter(alpha=0.3)+
   coord_flip()
 ```
+I chose this plot as with almost same reason as Plot One.
+Although we can easily see that standard deviation is bigger in each boxplot, 
+still the quality of wine tends to become better as its alcohol is stronger. 
+
 
 #Plot Three
 ```{r echo=FALSE}
@@ -498,15 +535,17 @@ ggplot(aes(x = alcohol,y = volatile.acidity, color = quality), data = data)+
   geom_smooth(method=lm,se=FALSE)+
   ggtitle("Scatter plots of alcohol and volatile.acidity with coloured quality")+
   xlab("Alcohol[%]")+
-  ylab("Volatile.acidity")+
+  ylab("Volatile.acidity[g / dm^3]")+
   scale_color_brewer(type = 'div',
                      guide = guide_legend(title = 'Quality', reverse = T,
                                           override.aes = list(alpha = 1, size = 2)))
+
+by(data$volatile.acidity, data$quality, length)
 ```
+After confirming two correlaitons with quality in above plots, I needed to take closer look thrir relationships in one graph. Therefore, I made scatter plot with colored quality and regression lines. This graph clearly states volatile.acidity has stronger correlation with alcohol.
 
-
-Description_Three:
-Color is changing from top-left to bottom-right. Since there is a pattern in this graph, the value of quality can be predictive.  
+Also regression lines of quality 3 and quality 8 are not horizontal comppared with other lines, but as you can see, each number of plot only has 10 and 18, for quality 3 and quality 8 respectively. If we have more samples for quality 3 and 8, the regression lines might be changed.   
+ 
 
 
 
